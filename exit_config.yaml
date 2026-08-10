@@ -1,0 +1,87 @@
+model:
+  path: yolov8n.pt
+  confidence: 0.45
+  inference_size: 416
+  process_every_n_frames: 3
+living_camera:
+  enabled: false
+  width: 640
+  height: 480
+  fps: 15
+  entrance_roi:
+  - 380
+  - 100
+  - 640
+  - 480
+entrance_camera:
+  device: 0
+  show_preview: true
+  width: 640
+  height: 480
+  fps: 15
+  door_roi:
+  - 17
+  - 26
+  - 625
+  - 390
+  indoor_line_x: 267
+  outdoor_line_x: 430
+fsm:
+  approach_hold_seconds: 0.8
+  disappear_confirm_seconds: 5.0
+  reset_seconds: 3.0
+  track_timeout_seconds: 1.0
+frame_buffer:
+  seconds: 20
+  sample_interval_seconds: 1.0
+  candidate_lookback_seconds: 10.0
+best_frame:
+  minimum_area_ratio: 0.05
+  minimum_brightness: 25
+  border_margin_px: 8
+  weights:
+    size: 0.4
+    not_cut: 0.35
+    sharpness: 0.25
+clothing:
+  minimum_crop_height: 80
+  saturation_ignore_threshold: 20
+  value_ignore_low: 20
+  value_ignore_high: 245
+kakao:
+  enabled: true
+  access_token: ''
+  endpoint: https://kapi.kakao.com/v2/api/talk/memo/default/send
+  link_url: https://developers.kakao.com
+  token_file: kakao_token.json
+  token_endpoint: https://kauth.kakao.com/oauth/token
+mobile_setup_calibration:
+  version: 1
+  source: mobile_single_boundary
+  updated_at: '2026-08-10T10:28:15'
+  boundary_line:
+  - - 0.31106
+    - 0.756039
+  - - 0.551843
+    - 0.636407
+  indoor_line:
+  - - 0.355555
+    - 0.845595
+  - - 0.596338
+    - 0.725963
+  outdoor_line:
+  - - 0.266565
+    - 0.666484
+  - - 0.507348
+    - 0.546852
+  exit_direction:
+  - -0.444951
+  - -0.895555
+  roi:
+  - - 0.206565
+    - 0.486852
+  - - 0.656338
+    - 0.905595
+  offsets:
+    indoor: 0.1
+    outdoor: 0.1

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover"
+    >
+    <title>홈캠 초기 설정</title>
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='setup.css') }}"
+    >
+</head>
+<body>
+    <main class="setup-container">
+        <header class="setup-header">
+            <p class="eyebrow">SEAWATER CARE</p>
+            <h1>홈캠 초기 설정</h1>
+            <p>
+                보호자 연결부터 외출 감지 시작까지
+                순서대로 진행해 주세요.
+            </p>
+        </header>
+
+        <section class="progress" aria-label="설정 진행률">
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+            <p id="progressText">1 / 5 단계</p>
+        </section>
+
+        <section class="step active" data-step="1">
+            <span class="step-number">1</span>
+            <h2>보호자 카카오톡 연결</h2>
+            <p>
+                외출 알림을 받을 보호자의 카카오계정으로
+                로그인합니다.
+            </p>
+            <button id="kakaoConnectButton" type="button">
+                카카오톡 연결
+            </button>
+            <p id="kakaoStatus" class="status">연결되지 않음</p>
+        </section>
+
+        <section class="step" data-step="2">
+            <span class="step-number">2</span>
+            <h2>현관 카메라 위치 조정</h2>
+            <p>
+                현관문과 이동 경로가 화면에 모두 보이도록
+                카메라 위치를 조정합니다.
+            </p>
+            <div class="camera-stage">
+                <img
+                    id="cameraPreview"
+                    alt="현관 카메라 미리보기"
+                >
+                <p id="cameraPlaceholder">
+                    카메라 연결 후 영상이 표시됩니다.
+                </p>
+            </div>
+        </section>
+
+        <section class="step" data-step="3">
+            <span class="step-number">3</span>
+            <h2>감지 영역과 선 설정</h2>
+            <p>
+                화면을 터치해 ROI, 초록선, 빨간선을
+                조정합니다.
+            </p>
+            <div id="calibrationStage" class="calibration-stage">
+                <canvas id="calibrationCanvas"></canvas>
+            </div>
+            <button id="resetCalibrationButton" type="button">
+                초기화
+            </button>
+            <button id="saveCalibrationButton" type="button">
+                영역 저장
+            </button>
+        </section>
+
+        <section class="step" data-step="4">
+            <span class="step-number">4</span>
+            <h2>외출 방향 확인</h2>
+            <p>
+                초록선에서 빨간선 방향이 외출 방향인지
+                확인합니다.
+            </p>
+            <div class="direction-guide">
+                <strong>초록선</strong>
+                <span aria-hidden="true">→</span>
+                <strong>빨간선</strong>
+            </div>
+            <button id="reverseDirectionButton" type="button">
+                방향 반대로 설정
+            </button>
+        </section>
+
+        <section class="step" data-step="5">
+            <span class="step-number">5</span>
+            <h2>시스템 시작</h2>
+            <p>
+                저장된 설정으로 외출 감지 시스템을
+                시작합니다.
+            </p>
+            <button id="startSystemButton" type="button">
+                외출 감지 시작
+            </button>
+            <p id="systemStatus" class="status">대기 중</p>
+        </section>
+
+        <nav class="setup-navigation">
+            <button id="previousButton" type="button" disabled>
+                이전
+            </button>
+            <button id="nextButton" type="button">
+                다음
+            </button>
+        </nav>
+    </main>
+
+    <script
+        src="{{ url_for('static', filename='setup.js') }}"
+    ></script>
+</body>
+</html>

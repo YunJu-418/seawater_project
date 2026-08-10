@@ -1,0 +1,292 @@
+﻿* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f5f7fb;
+    color: #172033;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+button {
+    font: inherit;
+}
+
+.app {
+    width: min(100%, 520px);
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 30px 20px 42px;
+    background: #ffffff;
+}
+
+.brand {
+    margin: 0 0 10px;
+    color: #718096;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 34px;
+    line-height: 1.2;
+}
+
+.intro {
+    margin: 18px 0 28px;
+    color: #718096;
+    font-size: 17px;
+    line-height: 1.65;
+}
+
+.progress-track {
+    height: 9px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e4e9f2;
+}
+
+.progress-bar {
+    width: 33.333%;
+    height: 100%;
+    border-radius: inherit;
+    background: #3865e8;
+    transition: width 0.25s ease;
+}
+
+.step-label {
+    margin: 10px 0 25px;
+    color: #667085;
+    text-align: right;
+}
+
+.step {
+    display: none;
+    padding: 26px 22px;
+    border: 1px solid #dce3ee;
+    border-radius: 24px;
+}
+
+.step.active {
+    display: block;
+}
+
+.number {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    margin-bottom: 22px;
+    place-items: center;
+    border-radius: 50%;
+    background: #dce8ff;
+    color: #2858d8;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+h2 {
+    margin: 0 0 18px;
+    font-size: 26px;
+    line-height: 1.35;
+}
+
+.step > p {
+    margin: 0 0 24px;
+    color: #718096;
+    font-size: 17px;
+    line-height: 1.65;
+}
+
+.primary,
+.secondary {
+    width: 100%;
+    min-height: 58px;
+    border: 0;
+    border-radius: 17px;
+    font-weight: 800;
+}
+
+.primary {
+    background: #3865e8;
+    color: #ffffff;
+}
+
+.primary:disabled {
+    cursor: not-allowed;
+    background: #aab7d8;
+    color: #eef2ff;
+}
+
+.secondary {
+    margin-top: 12px;
+    background: #edf2ff;
+    color: #2d55c7;
+}
+
+.status,
+.tip,
+.auto-note {
+    margin-top: 14px;
+    padding: 16px;
+    border-radius: 15px;
+    background: #f1f4f8;
+    color: #667085;
+    line-height: 1.5;
+}
+
+.camera-box,
+.canvas-wrap {
+    display: grid;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    place-items: center;
+    border-radius: 20px;
+    background: #10182b;
+    color: #d7ddea;
+    text-align: center;
+}
+
+.camera-box {
+    padding: 22px;
+}
+
+#boundaryCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+
+.legend {
+    display: grid;
+    gap: 7px;
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: 15px;
+    background: #f7f8fb;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.legend-indoor {
+    color: #32984c;
+}
+
+.legend-boundary {
+    color: #4b5563;
+}
+
+.legend-outdoor {
+    color: #d83b35;
+}
+
+.validation-message {
+    margin-top: 14px;
+    padding: 15px 16px;
+    border: 1px solid transparent;
+    border-radius: 15px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+.validation-message.ok {
+    border-color: #bfe8ca;
+    background: #ecf9ef;
+    color: #24743a;
+}
+
+.validation-message.warning {
+    border-color: #f1cf7a;
+    background: #fff7df;
+    color: #8b6200;
+}
+
+.validation-message.error {
+    border-color: #f0ada8;
+    background: #fff0ef;
+    color: #a52c25;
+}
+
+.finish {
+    margin-top: 18px;
+}
+
+nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 22px;
+}
+
+.nav-button {
+    min-height: 62px;
+    border: 0;
+    border-radius: 18px;
+    font-weight: 800;
+}
+
+.nav-button.light {
+    background: #e9edf5;
+    color: #344054;
+}
+
+.nav-button.dark {
+    background: #111827;
+    color: #ffffff;
+}
+
+.nav-button:disabled {
+    color: #aab1bd;
+    opacity: 0.7;
+}
+
+@media (max-width: 380px) {
+    .app {
+        padding-inline: 14px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    h2 {
+        font-size: 23px;
+    }
+}
+
+.camera-box {
+    padding: 0;
+    position: relative;
+}
+
+.canvas-wrap {
+    position: relative;
+}
+
+.camera-stream {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.canvas-wrap .camera-stream {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+#boundaryCanvas {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
