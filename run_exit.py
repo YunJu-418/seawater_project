@@ -13,6 +13,7 @@ from exit_system.best_frame import select_best_frame
 from exit_system.cameras import PiCameraThread, USBCameraThread
 from exit_system.clothing import analyze_clothing_colors
 from exit_system.event_logger import save_event
+from exit_system.retention import cleanup_old_exit_data
 from exit_system.exit_fsm import ExitFSM
 from exit_system.frame_buffer import SampledFrameBuffer
 from exit_system.kakao import KakaoNotifier
@@ -469,6 +470,9 @@ def main() -> None:
                     "living_approach_detected": living_approach,
                 }
                 event_path = save_event(payload)
+                deleted_images, deleted_events = cleanup_old_exit_data(7)
+                if deleted_images or deleted_events:
+                    print(f"[RETENTION] deleted images={deleted_images}, events={deleted_events}")
                 notifier.send_to_me(message, image_path)
                 print(f"[EVENT SAVED] {event_path}")
                 print(message)
