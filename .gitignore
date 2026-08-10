@@ -2,3 +2,14 @@ venv/
 __pycache__/
 *.pyc
 logs/
+kakao_token*.json
+auth_url.txt
+.env
+*.env
+*_before_*
+*.backup.*
+exit_config_*backup*.yaml
+data/
+c920_frame_test.jpg
+yolov8n.pt
+mobile_setup/backups/

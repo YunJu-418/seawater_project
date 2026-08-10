@@ -1,0 +1,174 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover"
+    >
+    <title>홈캠 초기 설정</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='setup_v2.css', v='20260804b') }}"
+    >
+</head>
+
+<body>
+<main class="app">
+    <header>
+        <p class="brand">SEAWATER CARE</p>
+        <h1>홈캠 초기 설정</h1>
+
+        <p class="intro">
+            보호자 연결부터 현관 출입 설정까지 순서대로 진행해 주세요.
+        </p>
+
+        <div class="progress-track">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <p id="stepLabel" class="step-label">1 / 3 단계</p>
+    </header>
+
+    <section class="step active" data-step="1">
+        <div class="number">1</div>
+
+        <h2>보호자 카카오톡 연결</h2>
+
+        <p>
+            외출 알림을 받을 보호자의 카카오계정으로 로그인합니다.
+        </p>
+
+        <button
+            id="kakaoButton"
+            class="primary"
+            type="button"
+        >
+            카카오톡 연결
+        </button>
+
+        <div id="kakaoStatus" class="status">
+            연결되지 않음
+        </div>
+    </section>
+
+    <section class="step" data-step="2">
+        <div class="number">2</div>
+
+        <h2>현관 카메라 위치 조정</h2>
+
+        <p>
+            현관문과 사람이 이동하는 경로가 모두 보이도록
+            카메라 위치를 조정해 주세요.
+        </p>
+
+        <div class="camera-box">
+            <img
+                id="cameraPreviewStep2"
+                class="camera-stream"
+                src="/camera/frame.jpg"
+                alt="현관 카메라 실시간 영상"
+            >
+        </div>
+
+        <div class="tip">
+            현관문 아래쪽, 사람의 발 위치, 현관 바깥쪽 공간이
+            모두 화면에 보이게 설치하면 감지가 안정적입니다.
+        </div>
+    </section>
+
+    <section class="step" data-step="3">
+        <div class="number">3</div>
+
+        <h2>현관 출입 설정</h2>
+
+        <p>
+            흰색 현관 경계선 하나만 조정하세요.
+            초록색 실내선과 빨간색 실외선은 자동으로 생성됩니다.
+        </p>
+
+        <div class="canvas-wrap">
+            <img
+                id="cameraPreviewStep3"
+                class="camera-stream"
+                src="/camera/frame.jpg"
+                alt="현관 카메라 실시간 영상"
+            >
+            <canvas id="boundaryCanvas"></canvas>
+        </div>
+
+        <div class="legend">
+            <span class="legend-indoor">초록색 · 실내 기준선</span>
+            <span class="legend-boundary">흰색 · 현관 경계선</span>
+            <span class="legend-outdoor">빨간색 · 실외 기준선</span>
+        </div>
+
+        <div
+            id="validationMessage"
+            class="validation-message ok"
+        >
+            현재 설정을 사용할 수 있습니다.
+        </div>
+
+        <button
+            id="resetLine"
+            class="secondary"
+            type="button"
+        >
+            경계선 초기화
+        </button>
+
+        <button
+            id="reverseDirection"
+            class="secondary"
+            type="button"
+        >
+            외출 방향 반대로
+        </button>
+
+        <div class="auto-note">
+            점선 영역은 자동 생성된 감지 범위입니다.
+            설정 완료 시 정규화 좌표로 저장됩니다.
+        </div>
+
+        <button
+            id="finishButton"
+            class="primary finish"
+            type="button"
+        >
+            설정 완료 및 감지 시작
+        </button>
+
+        <div id="finishStatus" class="status">
+            설정 대기 중
+        </div>
+    </section>
+
+    <nav>
+        <button
+            id="prevButton"
+            class="nav-button light"
+            type="button"
+            disabled
+        >
+            이전
+        </button>
+
+        <button
+            id="nextButton"
+            class="nav-button dark"
+            type="button"
+        >
+            다음
+        </button>
+    </nav>
+</main>
+
+<script
+    src="{{ url_for('static', filename='setup_v2.js', v='20260804b') }}"
+></script>
+</body>
+</html>
+
+
