@@ -1,0 +1,245 @@
+{
+  "version": "3.9.0",
+  "description": "Confirmed Bite is preserved while a delayed object-hand memory filter selects Meal Bite evidence",
+  "camera": {
+    "frame_width": 640,
+    "frame_height": 480,
+    "target_fps": 30,
+    "mirror": true,
+    "max_frame_gap_seconds": 0.25
+  },
+  "preprocessing": {
+    "brightness_target": 115.0,
+    "brightness_low_threshold": 65.0,
+    "brightness_high_threshold": 205.0,
+    "minimum_blur_score": 35.0,
+    "minimum_frame_quality_score": 0.35
+  },
+  "ema": {
+    "hand_position_alpha": 0.45,
+    "mouth_position_alpha": 0.4,
+    "distance_alpha": 0.35,
+    "score_alpha": 0.35
+  },
+  "hand_pose": {
+    "pinch_ratio_threshold": 0.34,
+    "grip_finger_ratio_threshold": 0.78,
+    "open_finger_ratio_threshold": 1.15
+  },
+  "holding": {
+    "hand_box_expand_ratio": 0.55,
+    "max_center_distance_ratio": 1.1,
+    "near_center_distance_ratio": 0.55,
+    "minimum_object_confidence": 0.18,
+    "object_memory_seconds": 0.45,
+    "hand_memory_seconds": 0.3,
+    "association_memory_seconds": 0.65,
+    "stable_distance_ratio": 0.28,
+    "stable_angle_degrees": 38.0,
+    "minimum_motion_for_comotion": 1.5,
+    "maximum_history": 10,
+    "holding_on_threshold": 0.58,
+    "holding_off_threshold": 0.36,
+    "weights": {
+      "overlap": 0.3,
+      "distance": 0.25,
+      "hand_pose": 0.2,
+      "spatial_stability": 0.15,
+      "comotion": 0.1
+    }
+  },
+  "mouth": {
+    "roi_width_face_ratio": 0.38,
+    "roi_height_face_ratio": 0.3,
+    "near_mouth_enter_ratio": 0.55,
+    "near_mouth_exit_ratio": 1.0,
+    "minimum_open_ratio": 0.055,
+    "occlusion_threshold": 0.45,
+    "tracking_memory_seconds": 0.35,
+    "occlusion_memory_seconds": 1.0,
+    "utensil_near_mouth_enter_ratio": 0.85
+  },
+  "virtual_plate": {
+    "enabled": true,
+    "initial_roi": {
+      "x_min_ratio": 0.12,
+      "y_min_ratio": 0.54,
+      "x_max_ratio": 0.88,
+      "y_max_ratio": 0.98
+    },
+    "roi_expand_ratio": 0.18
+  },
+  "relative_motion": {
+    "minimum_distance_change_ratio": 0.015,
+    "approach_direction_threshold": 0.2,
+    "leave_direction_threshold": -0.15
+  },
+  "bite_session": {
+    "minimum_near_mouth_seconds": 0.04,
+    "maximum_near_mouth_seconds": 2.0,
+    "maximum_approach_seconds": 3.0,
+    "maximum_total_seconds": 7.0,
+    "leave_confirm_seconds": 0.05,
+    "cooldown_seconds": 0.25,
+    "tracking_grace_seconds": 0.45,
+    "cancel_far_ratio": 0.75,
+    "pose_context_seconds": 1.0,
+    "plate_context_seconds": 2.5,
+    "leave_signal_hold_seconds": 0.08,
+    "minimum_low_zone_seconds": 0.35,
+    "low_zone_context_seconds": 3.0,
+    "low_zone_y_offset_ratio": 0.85,
+    "low_zone_min_distance_ratio": 1.2,
+    "minimum_distance_reduction_ratio": 0.32,
+    "fast_bite_reduction_ratio": 0.42,
+    "minimum_return_distance_increase": 0.25,
+    "minimum_return_distance_ratio": 1.0,
+    "approach_cancel_return_ratio": 0.92,
+    "fast_bite_max_distance_ratio": 0.95,
+    "cooldown_rearm_distance_ratio": 1.2,
+    "adaptive_near_reduction_ratio": 0.55,
+    "adaptive_near_max_distance_ratio": 1.2,
+    "minimum_absolute_distance_drop": 0.45,
+    "adaptive_near_absolute_drop": 0.65,
+    "fast_bite_absolute_drop": 0.6,
+    "fast_leave_distance_increase": 0.22,
+    "virtual_utensil_extension_ratio": 0.28,
+    "near_to_leave_distance_increase": 0.14,
+    "handheld_context_seconds": 180.0,
+    "handheld_rearm_distance_ratio": 0.9
+  },
+  "drink_session": {
+    "vessel_memory_seconds": 1.2,
+    "vessel_hand_near_ratio": 0.55,
+    "contact_to_disappear_seconds": 1.2,
+    "session_timeout_seconds": 15.0,
+    "return_confirm_seconds": 0.65,
+    "return_position_ratio": 1.1,
+    "cooldown_seconds": 3.0,
+    "strong_contact_ratio": 0.4,
+    "minimum_strong_contact_seconds": 0.18,
+    "strong_contact_to_disappear_seconds": 0.8,
+    "contact_candidate_timeout_seconds": 1.0,
+    "pickup_movement_ratio": 0.12,
+    "pickup_hand_movement_ratio": 0.18
+  },
+  "bite_fsm": {
+    "minimum_bite_interval_seconds": 0.35
+  },
+  "drink_fsm": {
+    "minimum_drink_interval_seconds": 1.5
+  },
+  "meal_fsm": {
+    "meal_start_bite_count": 5,
+    "meal_start_bite_window_seconds": 300.0,
+    "meal_start_drink_count": 999,
+    "meal_start_drink_window_seconds": 300.0,
+    "rest_enter_seconds": 30.0,
+    "long_rest_seconds": 90.0,
+    "other_enter_seconds": 4.0,
+    "end_candidate_seconds": 180.0,
+    "finish_seconds": 300.0,
+    "minimum_session_seconds": 60.0,
+    "maximum_session_seconds": 10800.0
+  },
+  "logger": {
+    "enabled": true,
+    "directory": "logs/meal",
+    "save_frame_events": false,
+    "save_state_changes": true,
+    "save_confirmed_events": true,
+    "save_debug_values": true,
+    "flush_every_events": 1
+  },
+  "debug_overlay": {
+    "enabled": true,
+    "show_fps": true,
+    "show_meal_state": true,
+    "show_bite_state": true,
+    "show_drink_state": true,
+    "show_counts": true,
+    "show_hand_pose": true,
+    "show_holding": true,
+    "show_virtual_plate": true,
+    "show_mouth_roi": true,
+    "show_object_boxes": true,
+    "show_frame_quality": true,
+    "show_session_values": true
+  },
+  "camera_motion_guard": {
+    "startup_ignore_seconds": 1.5,
+    "mouth_center_jump_face_ratio": 0.85,
+    "guard_hold_seconds": 0.35
+  },
+  "meal_candidate": {
+    "candidate_window_seconds": 300.0,
+    "minimum_distinct_bite_gap_seconds": 6.0,
+    "minimum_total_bites": 5,
+    "minimum_context_bites_with_object": 2,
+    "minimum_context_bites_without_object": 3,
+    "minimum_span_with_object_seconds": 30.0,
+    "minimum_span_without_object_seconds": 45.0,
+    "bite_score": 1.0,
+    "behavior_context_bite_bonus": 1.0,
+    "score_decay_per_second": 0.02,
+    "object_context_min_seconds": 2.0,
+    "object_context_gap_tolerance_seconds": 0.75,
+    "object_context_memory_seconds": 5.0,
+    "strong_context_labels": [
+      "bowl",
+      "plate",
+      "dish",
+      "apple",
+      "banana",
+      "sandwich",
+      "orange",
+      "broccoli",
+      "carrot",
+      "hot dog",
+      "pizza",
+      "donut",
+      "cake",
+      "food"
+    ]
+  },
+  "meal_evidence": {
+    "decision_delay_seconds": 1.0,
+    "object_memory_seconds": 3.0,
+    "hand_object_association_ratio": 0.85,
+    "minimum_object_confidence": 0.2,
+    "accepted_meal_bite_score": 1.0,
+    "context_meal_bite_bonus": 1.0,
+    "phone_labels": [
+      "cell phone",
+      "phone",
+      "mobile phone"
+    ],
+    "vessel_labels": [
+      "cup",
+      "mug",
+      "glass",
+      "wine glass",
+      "bottle",
+      "water bottle"
+    ],
+    "utensil_labels": [
+      "fork",
+      "knife",
+      "spoon",
+      "chopsticks"
+    ],
+    "food_labels": [
+      "apple",
+      "banana",
+      "sandwich",
+      "orange",
+      "broccoli",
+      "carrot",
+      "hot dog",
+      "pizza",
+      "donut",
+      "cake",
+      "food"
+    ]
+  }
+}
