@@ -5,7 +5,8 @@ from vision.camera import Camera
 from vision.hand import HandDetector
 from vision.face import FaceDetector
 from vision.medication import MedicationDetector
-from utils.logger import MedicationLogger
+from medication_logger import MedicationLogger
+
 
 
 def main():
@@ -13,9 +14,10 @@ def main():
     hand_detector = HandDetector(max_num_hands=2)
     face_detector = FaceDetector()
     medication_detector = MedicationDetector()
-    logger = MedicationLogger()
 
-    saved = False
+    medication_logger = MedicationLogger(
+        log_path="logs/medication_log.json"
+    )
 
     try:
         while True:
@@ -32,6 +34,10 @@ def main():
                 frame = frame,
                 hand_points = hand_points,
                 face_boxes = face_boxes
+            )
+
+            medication_log_result = medication_logger.log_if_taken(
+                medication_result["state"]
             )
 
             frame = hand_detector.draw(frame, hand_result)
@@ -58,14 +64,6 @@ def main():
                 2,
             )
 
-            if medication_result["state"] in ["MEDICATION_DONE", "MEDICATION DONE"]:
-                if not saved:
-                    logger.save_event(
-                        event="Medication Completed",
-                        state=medication_result["state"],
-                    )
-                    saved = True
-
             cv2.imshow("Medication Care System", frame)
 
             key = cv2.waitKey(1) & 0xFF
@@ -75,7 +73,6 @@ def main():
 
             if key == ord("r"):
                 medication_detector.reset()
-                saved = False
 
 
     finally:
