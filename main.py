@@ -1,4 +1,4 @@
-import argparse
+﻿import argparse
 import cv2
 
 from vision.camera import Camera
@@ -96,6 +96,12 @@ def run_meal(meal_args=None):
     return meal_main(meal_args)
 
 
+def run_exit():
+    """Run the exit detection system."""
+    from run_exit import main as exit_main
+    return exit_main()
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(
         description="Seawater 통합 실행 파일",
@@ -103,7 +109,7 @@ def parse_arguments():
 
     parser.add_argument(
         "--mode",
-        choices=("medication", "meal"),
+        choices=("medication", "meal", "exit"),
         default=None,
         help="실행 기능. 지정하지 않으면 터미널에서 선택합니다.",
     )
@@ -139,13 +145,16 @@ def main():
         print("실행할 기능을 선택하세요.")
         print("1. Medication")
         print("2. Meal")
+        print("3. Exit")
 
-        choice = input("선택 (1/2): ").strip()
+        choice = input("선택 (1/2/3): ").strip()
 
         if choice == "1":
             mode = "medication"
         elif choice == "2":
             mode = "meal"
+        elif choice == "3":
+            mode = "exit"
         else:
             print("잘못된 선택입니다.")
             return 1
@@ -163,6 +172,9 @@ def main():
             meal_args.append("--no-display")
 
         return run_meal(meal_args)
+
+    if mode == "exit":
+        return run_exit()
 
     return 1
 
