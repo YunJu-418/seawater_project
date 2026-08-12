@@ -14,9 +14,10 @@ def run_medication():
     hand_detector = HandDetector(max_num_hands=2)
     face_detector = FaceDetector()
     medication_detector = MedicationDetector()
-    logger = MedicationLogger()
 
-    saved = False
+    medication_logger = MedicationLogger(
+        log_path="logs/medication_log.json"
+    )
 
     try:
         while True:
@@ -33,6 +34,10 @@ def run_medication():
                 frame=frame,
                 hand_points=hand_points,
                 face_boxes=face_boxes,
+            )
+
+            medication_log_result = medication_logger.log_if_taken(
+                medication_result["state"]
             )
 
             frame = hand_detector.draw(frame, hand_result)
@@ -62,17 +67,6 @@ def run_medication():
                 2,
             )
 
-            if medication_result["state"] in [
-                "MEDICATION_DONE",
-                "MEDICATION DONE",
-            ]:
-                if not saved:
-                    logger.save_event(
-                        event="Medication Completed",
-                        state=medication_result["state"],
-                    )
-                    saved = True
-
             cv2.imshow("Medication Care System", frame)
 
             key = cv2.waitKey(1) & 0xFF
@@ -82,7 +76,6 @@ def run_medication():
 
             if key == ord("r"):
                 medication_detector.reset()
-                saved = False
 
     finally:
         camera.release()
@@ -92,7 +85,6 @@ def run_medication():
         print("프로그램 종료 완료")
 
     return 0
-
 
 def run_meal(meal_args=None):
     """기존 main_meal.py의 식사 기능을 호출한다."""
