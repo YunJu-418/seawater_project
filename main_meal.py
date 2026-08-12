@@ -46,7 +46,7 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 import cv2
 
 from meal.meal_fsm import FSMUpdateResult, MealFSM
-from meal.meal_logger import MealLogger
+from utils.logger import MealLogger
 from meal.meal_state import (
     BoxXYXY,
     Detection,
