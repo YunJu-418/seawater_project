@@ -30,7 +30,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, time as datetime_time
 from enum import Enum
 from pathlib import Path
 from threading import RLock
@@ -960,8 +960,233 @@ class MealLogger:
             timezone.utc
         ).isoformat()
 
+class MedicationLogger:
+    """약 복용 완료 기록 저장기."""
+
+    def __init__(
+        self,
+        log_path: str | Path = "logs/medication_log.json",
+    ) -> None:
+        self.log_path = Path(log_path)
+
+        self.log_path.parent.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        self._lock = RLock()
+
+        # 아침 / 점심 / 저녁 복약 시간대
+        self.meal_times = {
+            "morning": {
+                "label": "아침",
+                "start": datetime_time(6, 0),
+                "end": datetime_time(10, 0),
+            },
+            "lunch": {
+                "label": "점심",
+                "start": datetime_time(11, 0),
+                "end": datetime_time(14, 0),
+            },
+            "dinner": {
+                "label": "저녁",
+                "start": datetime_time(17, 0),
+                "end": datetime_time(21, 0),
+            },
+        }
+
+        if not self.log_path.exists():
+            self._write_logs([])
+
+    def _read_logs(self) -> list[dict[str, Any]]:
+        try:
+            with self.log_path.open(
+                "r",
+                encoding="utf-8",
+            ) as file:
+                logs = json.load(file)
+
+            if isinstance(logs, list):
+                return logs
+
+            return []
+
+        except Exception:
+            return []
+
+    def _write_logs(
+        self,
+        logs: list[dict[str, Any]],
+    ) -> None:
+        with self._lock:
+            self.log_path.parent.mkdir(
+                parents=True,
+                exist_ok=True,
+            )
+
+            with self.log_path.open(
+                "w",
+                encoding="utf-8",
+            ) as file:
+                json.dump(
+                    logs,
+                    file,
+                    ensure_ascii=False,
+                    indent=4,
+                )
+
+    def reset_logs(self) -> None:
+        """
+        테스트용 로그 초기화.
+        실제 main.py에서는 사용하지 않는 것을 권장.
+        """
+        self._write_logs([])
+
+    def get_current_meal(
+        self,
+        now: Optional[datetime] = None,
+    ) -> Optional[str]:
+        """
+        현재 시간이 아침/점심/저녁 복약 시간대인지 확인.
+        해당 시간이 아니면 None 반환.
+        """
+        if now is None:
+            now = datetime.now()
+
+        current_time = now.time()
+
+        for meal_key, meal_info in self.meal_times.items():
+            if (
+                meal_info["start"]
+                <= current_time
+                <= meal_info["end"]
+            ):
+                return meal_key
+
+        return None
+
+    def has_taken_today(
+        self,
+        meal_key: str,
+        now: Optional[datetime] = None,
+    ) -> bool:
+        """
+        오늘 해당 시간대 약을 이미 복용 기록했는지 확인.
+        """
+        if now is None:
+            now = datetime.now()
+
+        today = now.strftime("%Y-%m-%d")
+        logs = self._read_logs()
+
+        for log in logs:
+            if (
+                log.get("date") == today
+                and log.get("meal") == meal_key
+                and log.get("event") == "MEDICATION_TAKEN"
+            ):
+                return True
+
+        return False
+
+    def log_if_taken(
+        self,
+        vision_state: str,
+        now: Optional[datetime] = None,
+    ) -> Dict[str, Any]:
+        """
+        vision_state가 MEDICATION_DONE일 때만 복용 기록 저장.
+
+        반환 log_state:
+        - LOGGED: 새 복용 기록 저장 완료
+        - ALREADY_LOGGED: 오늘 해당 시간대 복용 기록이 이미 있음
+        - NOT_DONE: MEDICATION_DONE 상태가 아님
+        - NOT_MEDICATION_TIME: 아침/점심/저녁 복약 시간이 아님
+        """
+        if now is None:
+            now = datetime.now()
+
+        if vision_state != "MEDICATION_DONE":
+            return {
+                "log_state": "NOT_DONE",
+                "meal": None,
+                "meal_label": None,
+                "taken_time": None,
+                "vision_state": vision_state,
+            }
+
+        meal_key = self.get_current_meal(now)
+
+        if meal_key is None:
+            return {
+                "log_state": "NOT_MEDICATION_TIME",
+                "meal": None,
+                "meal_label": None,
+                "taken_time": None,
+                "vision_state": vision_state,
+            }
+
+        meal_label = self.meal_times[meal_key]["label"]
+
+        if self.has_taken_today(
+            meal_key=meal_key,
+            now=now,
+        ):
+            return {
+                "log_state": "ALREADY_LOGGED",
+                "meal": meal_key,
+                "meal_label": meal_label,
+                "taken_time": None,
+                "vision_state": vision_state,
+            }
+
+        taken_time = now.strftime("%Y-%m-%d %H:%M:%S")
+
+        logs = self._read_logs()
+        logs.append(
+            {
+                "date": now.strftime("%Y-%m-%d"),
+                "time": taken_time,
+                "meal": meal_key,
+                "meal_label": meal_label,
+                "event": "MEDICATION_TAKEN",
+                "vision_state": vision_state,
+            }
+        )
+
+        self._write_logs(logs)
+
+        return {
+            "log_state": "LOGGED",
+            "meal": meal_key,
+            "meal_label": meal_label,
+            "taken_time": taken_time,
+            "vision_state": vision_state,
+        }
+
+    def get_today_logs(
+        self,
+        now: Optional[datetime] = None,
+    ) -> list[dict[str, Any]]:
+        """
+        오늘 복용 기록만 반환.
+        LLM 담당자가 오늘 아침/점심/저녁 복용 여부를 확인할 때 사용 가능.
+        """
+        if now is None:
+            now = datetime.now()
+
+        today = now.strftime("%Y-%m-%d")
+        logs = self._read_logs()
+
+        return [
+            log for log in logs
+            if log.get("date") == today
+        ]
+
+
 
 __all__ = [
     "MealLogger",
     "MealLoggerError",
+    "MedicationLogger",
 ]
