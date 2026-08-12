@@ -1,4 +1,12 @@
-venv/
+models/*.pt
+*.pt
 __pycache__/
 *.pyc
+venv/
+.venv/
+.env
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
 logs/
