@@ -1,0 +1,21 @@
+# Vision
+opencv-python
+mediapipe
+
+# LLM guidance generation
+openai>=1.0.0
+python-dotenv
+
+# TTS / audio output
+gTTS
+pygame
+
+# STT (microphone input)
+SpeechRecognition
+PyAudio
+
+# TTS speed control (also install ffmpeg binary: winget install ffmpeg / apt install ffmpeg)
+pydub
+
+# Neural TTS (natural Korean voices, built-in speed control)
+edge-tts

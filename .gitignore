@@ -13,3 +13,7 @@ data/
 c920_frame_test.jpg
 yolov8n.pt
 mobile_setup/backups/
+
+venv/
+.venv/
+audio_cache/

@@ -6,6 +6,8 @@ from vision.hand import HandDetector
 from vision.face import FaceDetector
 from vision.medication import MedicationDetector
 from utils.logger import MedicationLogger
+from guidance_service import GuidanceService
+from llm.events import GuidanceEvent
 
 
 def calc_distance(p1, p2):
@@ -68,6 +70,7 @@ def main():
     face_detector = FaceDetector()
     medication_detector = MedicationDetector()
     logger = MedicationLogger()
+    guidance = GuidanceService(enable_voice=True)
 
     state = "WAITING"
     grabbed_count = 0
@@ -121,6 +124,9 @@ def main():
                             state=state,
                         )
                         saved = True
+
+                        # LLM 기반 맞춤형 음성 안내 (별도 스레드에서 처리 → 비전 루프 유지)
+                        guidance.notify(GuidanceEvent.MEDICATION_DONE)
 
             cv2.putText(
                 frame,
